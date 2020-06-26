@@ -1,7 +1,10 @@
-var found = false;
+const centralImage = document.getElementsByClassName('round-img')[0]
 const creds = "M2YzYTIxYTk1MTIyNGIwY2E0Y2IxNDUzMWRiZGQyZWE6MTBjNGM2ZTcxZmRhNGQwZWIyZTJlMTc0MTYwNWQwYzY=";
 var key = "";
 var info = {};
+var tk = {}
+var at = {}
+var testImg
 async function token() {
     await fetch(`https://accounts.spotify.com/api/token`, {
         method: 'POST',
@@ -43,7 +46,7 @@ var randomWord = function (len) {
 
 
 async function search(id) {
-    await fetch(`https://api.spotify.com/v1/search?q=${id}&type=track`, {
+    await fetch(`https://api.spotify.com/v1/search?q=${id}&type=track&limit=1&offset=${Math.floor(Math.random() * 20)}`, {
         method: "GET",
         headers: {
             Accept: "application/json",
@@ -54,7 +57,7 @@ async function search(id) {
         .then(r => r.json())
         .then(data => {
             info = data;
-            songID = info.tracks.items[Math.floor(Math.random() * (info.tracks.items.length / 2))].id
+            songID = info.tracks.items[0].id
         })
 
 }
@@ -70,7 +73,27 @@ async function track(id) {
     })
         .then(r => r.json())
         .then(data => info = data)
+    tk = {
+        'name': info.name,
+        'artist': info.artists[0]
+    }
 
+}
+async function artist(id) {
+    await fetch(`https://api.spotify.com/v1/artists/${id}`, {
+        method: "GET",
+        headers: {
+            Accept: "application/json",
+            "content-type": "application/json",
+            Authorization: `Bearer ${key}`,
+        }
+    })
+        .then(r => r.json())
+        .then(data => info = data)
+    at = {
+        'name': info.name,
+        'imgurl': info.images[0].url,
+    }
 
 }
 
@@ -81,8 +104,12 @@ async function works() {
     await token()
     await search(r)
     await track(songID)
+    await artist(tk['artist'].id)
+    centralImage.setAttribute('style', 'background-image: url(' + at.imgurl + ')')
+    console.log(`name: ${tk.name}, artist: ${at.name}`)
     console.log(r)
-    console.log(`name: ${info.name}, artist: ${info.artists[0].name}`)
+
+    console.log(info)
 }
 
 works()

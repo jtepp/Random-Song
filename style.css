@@ -1,0 +1,27 @@
+:root{
+    --s:300px;
+}
+
+.round-img{
+    position: relative;
+    top: calc(var(--s) / 2);
+    left: 50%;
+    width: var(--s);
+    height: var(--s);
+    background-position: center;
+    background-size: contain;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 0;
+    margin-top: -8px;
+    padding: 0;
+    transform: translate(-50%,-50%);
+}
+
+/* .image{
+    
+    width: auto;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+} */
